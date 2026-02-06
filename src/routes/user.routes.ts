@@ -20,3 +20,12 @@ userRouter.put('/:id', validate(updateUserSchema), userController.updateUser.bin
 
 // Delete user
 userRouter.delete('/:id', userController.deleteUser.bind(userController));
+
+// Follow user
+userRouter.post('/follow/:followerId/:followingId', userController.followUser.bind(userController));
+
+// UnFollow user
+userRouter.post('/unfollow/:followerId/:followingId', userController.unfollowUser.bind(userController));
+
+// Like post by user
+userRouter.post('/like/:userId/:postId', userController.like.bind(userController));

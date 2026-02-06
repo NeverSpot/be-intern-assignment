@@ -18,6 +18,7 @@ export const createUserSchema = Joi.object({
   }),
 });
 
+
 export const updateUserSchema = Joi.object({
   firstName: Joi.string().min(2).max(255).messages({
     'string.min': 'First name must be at least 2 characters long',

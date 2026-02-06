@@ -9,7 +9,7 @@
     "build": "tsc",
     "format": "prettier --write \"src/**/*.ts\"",
     "typeorm": "typeorm-ts-node-commonjs",
-    "migration:generate": "npm run typeorm migration:generate -- -d src/data-source.ts",
+    "migration:generate": "npm run typeorm -- migration:generate src/migrations/CreateUsersTable -d ./src/data-source.ts",
     "migration:run": "npm run typeorm migration:run -- -d src/data-source.ts",
     "migration:revert": "npm run typeorm migration:revert -- -d src/data-source.ts"
   },
@@ -25,7 +25,7 @@
     "reflect-metadata": "^0.2.2",
     "sqlite3": "^5.1.7",
     "ts-node": "^10.9.2",
-    "typeorm": "^0.3.22",
+    "typeorm": "0.3.26",
     "typescript": "^5.8.3"
   },
   "devDependencies": {
