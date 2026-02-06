@@ -1,8 +1,10 @@
 import { Router } from 'express';
 import { PostController } from '../controllers/post.controller';
+import { LikeController } from '../controllers/like.controller';
 
 export const postRouter = Router();
 const postController = new PostController();
+const likeController=new LikeController();
 
 // Get all post
 postRouter.get('/', postController.getAllPost.bind(postController));
@@ -15,3 +17,6 @@ postRouter.post('/', postController.createPost.bind(postController));
 
 // Delete post
 postRouter.delete('/:id', postController.deletePost.bind(postController));
+
+// Like post by user
+postRouter.post('/:postId/like/:userId', likeController.like.bind(likeController));

@@ -2,9 +2,14 @@ import { Router } from 'express';
 import { validate } from '../middleware/validation.middleware';
 import { createUserSchema, updateUserSchema } from '../validations/user.validation';
 import { UserController } from '../controllers/user.controller';
+import { FollowController } from '../controllers/follow.controller';
+import { UnfollowController } from '../controllers/unfollow.controller';
 
 export const userRouter = Router();
 const userController = new UserController();
+const followController = new FollowController();
+const unfollowController = new UnfollowController();
+
 
 // Get all users
 userRouter.get('/', userController.getAllUsers.bind(userController));
@@ -21,11 +26,8 @@ userRouter.put('/:id', validate(updateUserSchema), userController.updateUser.bin
 // Delete user
 userRouter.delete('/:id', userController.deleteUser.bind(userController));
 
-// Follow user
-userRouter.post('/follow/:followerId/:followingId', userController.followUser.bind(userController));
+// follow a user
+userRouter.post("/:followerId/:followingId/follow",followController.followUser.bind(followController));
 
-// UnFollow user
-userRouter.post('/unfollow/:followerId/:followingId', userController.unfollowUser.bind(userController));
-
-// Like post by user
-userRouter.post('/like/:userId/:postId', userController.like.bind(userController));
+// unfollow a user
+userRouter.post('/:followerId/:followingId/unfollow', unfollowController.unfollowUser.bind(unfollowController));
