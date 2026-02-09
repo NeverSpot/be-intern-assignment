@@ -5,7 +5,7 @@ import { AppDataSource } from '../data-source';
 export class UserController {
   private userRepository = AppDataSource.getRepository(User);
 
-  async getAllUsers(req: Request, res: Response) {
+  async getAllUsers(_req: Request, res: Response) {
     try {
       const users = await this.userRepository.find();
       res.json(users);

@@ -3,21 +3,24 @@ import {
   PrimaryGeneratedColumn,
   Column,
   ManyToOne,
-  JoinColumn,
+  JoinColumn, PrimaryColumn,
 } from 'typeorm';
 import { Post } from './Post';
 
 @Entity()
-export class HashTag{
+export class HashTag {
   @PrimaryGeneratedColumn()
-  id:number;
+  id: number;
+
+  @PrimaryColumn('int')
+  postId: number;
 
   @Column('varchar')
-  value:string;
+  value: string;
 
-  @ManyToOne(()=>Post,post=>post.hashTags,{
-    onDelete:"CASCADE"
+  @ManyToOne(() => Post, (post) => post.hashTags, {
+    onDelete: 'CASCADE',
   })
-  @JoinColumn({name:"postId"})
-  post:Post;
+  @JoinColumn({ name: 'postId' })
+  post: Post;
 }

@@ -3,12 +3,14 @@ import { Post } from '../entities/Post';
 import {User} from "../entities/User"
 import {HashTag} from "../entities/Hashtag"
 import { AppDataSource } from '../data-source';
+import { Activity } from '../entities/Activity';
 
 
 export class PostController {
   private postRepository = AppDataSource.getRepository(Post);
-  private userRepository=AppDataSource.getRepository(User);
-  private hashRepository=AppDataSource.getRepository(HashTag);
+  private userRepository = AppDataSource.getRepository(User);
+  private hashRepository = AppDataSource.getRepository(HashTag);
+  private activityRepository = AppDataSource.getRepository(Activity);
 
   async getAllPost(req: Request, res: Response) {
     try {
@@ -37,7 +39,7 @@ export class PostController {
     try {
       const id = parseInt(req.params.id);
       if (Number.isNaN(id)) {
-        return  res.status(404).json('Post not found');
+        return res.status(404).json('Post not found');
       }
       const result = await this.postRepository.delete(id);
       if (result.affected === 0) {
@@ -50,10 +52,10 @@ export class PostController {
   }
   async createPost(req: Request, res: Response) {
     try {
-      const {content,authorId,hashtags}= req.body;
-      const author= await this.userRepository.findOneBy({ id:authorId });
-      if(!author){
-        return res.status(404).send("User not found");
+      const { content, authorId, hashtags } = req.body;
+      const author = await this.userRepository.findOneBy({ id: authorId });
+      if (!author) {
+        return res.status(404).send('User not found');
       }
       const post = this.postRepository.create({
         content,
@@ -61,14 +63,27 @@ export class PostController {
       });
 
       await this.postRepository.save(post);
-      for (const value of hashtags){
-        const hashtag=this.hashRepository.create({
-          value,
+      for (const value of hashtags as string) {
+        // value ko lowercase me krdo
+        const valueCaseInsensitive = value.toLowerCase();
+
+        const hashtag = this.hashRepository.create({
+          value: valueCaseInsensitive,
           post,
-        })
+        });
         await this.hashRepository.save(hashtag);
       }
-      res.status(201).send("Post created");
+
+      // Adding to activity DB
+      await this.activityRepository.save(
+        this.activityRepository.create({
+          activityType: "Post",
+          userId: author.id,
+          activityData: post.id,
+        })
+      );
+
+      res.status(201).send('Post created');
     } catch (error) {
       res.status(500).json({ message: 'Error creating post', error });
     }

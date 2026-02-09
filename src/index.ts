@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import { AppDataSource } from './data-source';
 import { userRouter } from './routes/user.routes';
 import { postRouter } from './routes/post.routes';
+import { feedRouter } from './routes/feed.routes';
 
 dotenv.config();
 
@@ -24,6 +25,7 @@ app.get('/', (req, res) => {
 
 app.use('/api/users', userRouter);
 app.use('/api/posts', postRouter);
+app.use('/api/feed', feedRouter);
 
 
 

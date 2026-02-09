@@ -9,10 +9,10 @@ import { Post } from './Post';
 
 @Entity()
 export class Like {
-  @PrimaryColumn()
+  @PrimaryColumn("int")
   likerId: number;
 
-  @PrimaryColumn()
+  @PrimaryColumn("int")
   postId: number;
 
   @ManyToOne(() => User, (user) => user.likes, { onDelete: 'CASCADE' })

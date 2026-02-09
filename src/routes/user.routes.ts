@@ -4,11 +4,13 @@ import { createUserSchema, updateUserSchema } from '../validations/user.validati
 import { UserController } from '../controllers/user.controller';
 import { FollowController } from '../controllers/follow.controller';
 import { UnfollowController } from '../controllers/unfollow.controller';
+import { ActivityController } from '../controllers/activity.controller';
 
 export const userRouter = Router();
 const userController = new UserController();
 const followController = new FollowController();
 const unfollowController = new UnfollowController();
+const activityController = new ActivityController();
 
 
 // Get all users
@@ -31,3 +33,8 @@ userRouter.post("/:followerId/:followingId/follow",followController.followUser.b
 
 // unfollow a user
 userRouter.post('/:followerId/:followingId/unfollow', unfollowController.unfollowUser.bind(unfollowController));
+
+// Get all user Activities
+userRouter.post('/:id/activity',activityController.getActivityById.bind(activityController));
+
+userRouter.get('/:id/followers',followController.getFollower.bind(followController));

@@ -1,12 +1,12 @@
-import { Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
+import { CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 import { User } from './User';
 
 @Entity()
 export class Follow {
-  @PrimaryColumn()
+  @PrimaryColumn("int")
   followerId: number;
 
-  @PrimaryColumn()
+  @PrimaryColumn("int")
   followingId: number;
 
   @ManyToOne(() => User, { onDelete: 'CASCADE' })
@@ -16,4 +16,7 @@ export class Follow {
   @ManyToOne(() => User, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'followingId' })
   following: User;
+
+  @CreateDateColumn()
+  followedAt: Date;
 }
