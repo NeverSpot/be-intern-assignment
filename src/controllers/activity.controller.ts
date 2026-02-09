@@ -37,7 +37,7 @@ export class ActivityController {
 
 
     let filter=req.body.filter;
-    if(filter===undefined){
+    if(!filter){
       filter = ['Follow', 'Unfollow', 'Post', 'Like'];
     }
     const activities = await this.activityRepository

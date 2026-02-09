@@ -3,7 +3,7 @@ import {
   PrimaryGeneratedColumn,
   Column,
   ManyToOne,
-  JoinColumn, PrimaryColumn,
+  JoinColumn,
 } from 'typeorm';
 import { Post } from './Post';
 
@@ -12,7 +12,7 @@ export class HashTag {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @PrimaryColumn('int')
+  @Column('int')
   postId: number;
 
   @Column('varchar')
