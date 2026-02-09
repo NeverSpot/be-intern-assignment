@@ -9,12 +9,17 @@ export class HashtagController{
 
   async findPostByTag(req:Request,res:Response){
     const tag = (req.params['tag'] as string).toLowerCase();
+    const limit = Math.min(parseInt(req.query.limit as string) || 10, 50);
+    const offset = Math.max(parseInt(req.query.offset as string) || 0, 0);
+
 
     const posts = await this.postRepository
       .createQueryBuilder('p')
       .innerJoin('p.hashTags', 'h')
       .leftJoinAndSelect('p.author', 'u')
       .where('h.value = :tag', { tag })
+      .take(limit)
+      .skip(offset)
       .getMany();
 
     class postDataType {

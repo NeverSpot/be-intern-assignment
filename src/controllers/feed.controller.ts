@@ -14,6 +14,9 @@ export class FeedController {
 
   async getFeed(req: Request, res: Response) {
     const userId: number = parseInt(req.body['userId']);
+    const limit = Math.min(parseInt(req.query.limit as string) || 10, 50 );
+    const offset = Math.max(parseInt(req.query.offset as string) || 0, 0);
+
     const followers = await this.followRepository
       .createQueryBuilder('f')
       .select('f.followerId')
@@ -24,6 +27,9 @@ export class FeedController {
       .createQueryBuilder('p')
       .innerJoinAndSelect('p.author', 'u')
       .where('u.id IN (:...followerIds)', { followerIds })
+      .orderBy('p.createdAt')
+      .take(limit)
+      .skip(offset)
       .getMany();
 
     class feedPost{

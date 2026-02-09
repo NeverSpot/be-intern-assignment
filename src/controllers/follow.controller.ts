@@ -43,10 +43,15 @@ export class FollowController {
 
   async getFollower(req:Request,res:Response){
     const userId = parseInt(req.params['id']);
+    const limit = Math.min(parseInt(req.query.limit as string) || 10, 50);
+    const offset = Math.max(parseInt(req.query.offset as string) || 0, 0);
+
     const followerList = await this.followRepository
       .createQueryBuilder('f')
       .where('f.followingId=:userId', { userId })
       .orderBy('f.followedAt',"DESC")
+      .take(limit)
+      .skip(offset)
         .getMany();
 
     const followerIds = followerList.map((f) => f.followerId);

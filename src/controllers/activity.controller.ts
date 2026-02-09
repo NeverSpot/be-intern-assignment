@@ -32,6 +32,9 @@ export class ActivityController {
 
   async getActivityById(req: Request, res: Response) {
     const userId = parseInt(req.params['id']);
+    const limit = Math.min(parseInt(req.query.limit as string) || 10, 50);
+    const offset = Math.max(parseInt(req.query.offset as string) || 0, 0);
+
 
     let filter=req.body.filter;
     if(filter===undefined){
@@ -41,6 +44,8 @@ export class ActivityController {
       .createQueryBuilder('a')
       .where('a.userId=:userId and a.activityType IN (:...filter)', { userId,filter })
       .orderBy('a.createdAt', 'DESC')
+      .take(limit)
+      .skip(offset)
       .getMany();
 
     const data: result[] = [];
