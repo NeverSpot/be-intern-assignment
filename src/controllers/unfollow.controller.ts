@@ -21,8 +21,8 @@ export class UnfollowController {
         return res.status(404).send('User not found');
       }
       const result = await this.followRepository.delete({
-        follower: follower,
-        following: following,
+        followerId: follower.id,
+        followingId: following.id,
       });
 
       // Adding to activity DB

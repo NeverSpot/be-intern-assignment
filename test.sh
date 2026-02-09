@@ -24,12 +24,12 @@ make_request() {
     local method=$1
     local endpoint=$2
     local data=$3
-    
+
     echo -e "${BLUE}Request:${NC} $method $endpoint"
     if [ -n "$data" ]; then
         echo -e "${BLUE}Data:${NC} $data"
     fi
-    
+
     echo -e "${BLUE}Response:${NC}"
     if [ "$method" = "GET" ]; then
         curl -s -X $method "$endpoint" | jq .
@@ -57,8 +57,9 @@ test_create_user() {
     read -p "Enter first name: " firstName
     read -p "Enter last name: " lastName
     read -p "Enter email: " email
-    
-    local data=$(cat <<EOF
+
+    local data;
+    data=$(cat <<EOF
 {
     "firstName": "$firstName",
     "lastName": "$lastName",
@@ -75,7 +76,7 @@ test_update_user() {
     read -p "New first name (leave blank to skip): " firstName
     read -p "New last name (leave blank to skip): " lastName
     read -p "New email (leave blank to skip): " email
-    
+
     local data="{"
     local first=true
     if [ -n "$firstName" ]; then
@@ -92,7 +93,7 @@ test_update_user() {
         data+="\"email\": \"$email\""
     fi
     data+="}"
-    
+
     make_request "PUT" "$USERS_URL/$id" "$data"
 }
 
@@ -120,7 +121,7 @@ test_create_post() {
     read -p "Enter author ID: " authorId
     read -p "Enter content: " content
     read -p "Enter hashtags (comma separated, e.g. tech,news): " tags
-    
+
     # Convert comma-separated string to JSON array
     local hashtags_json="[]"
     if [ -n "$tags" ]; then
@@ -175,7 +176,7 @@ test_get_user_activity() {
     read -p "Enter filters (comma separated, e.g. Follow,Post,Like) or leave blank: " filters
     read -p "Enter limit (optional): " limit
     read -p "Enter offset (optional): " offset
-    
+
     local filter_json="null"
     if [ -n "$filters" ]; then
         filter_json="["
@@ -205,7 +206,7 @@ test_get_user_followers() {
     read -p "Enter user ID: " id
     read -p "Enter limit (optional): " limit
     read -p "Enter offset (optional): " offset
-    
+
     local url="$USERS_URL/$id/followers"
     local query=""
     if [ -n "$limit" ]; then
@@ -218,11 +219,11 @@ test_get_user_followers() {
             query="offset=$offset"
         fi
     fi
-    
+
     if [ -n "$query" ]; then
         url+="?$query"
     fi
-    
+
     make_request "GET" "$url"
 }
 
@@ -238,7 +239,7 @@ test_get_posts_by_hashtag() {
     read -p "Enter hashtag: " tag
     read -p "Enter limit (optional): " limit
     read -p "Enter offset (optional): " offset
-    
+
     local data="{}"
     if [ -n "$limit" ] || [ -n "$offset" ]; then
         data="{"
@@ -253,7 +254,7 @@ test_get_posts_by_hashtag() {
         fi
         data+="}"
     fi
-    
+
     make_request "POST" "$POSTS_URL/hashtag/$tag" "$data"
 }
 
@@ -262,7 +263,7 @@ test_get_feed() {
     read -p "Enter user ID: " userId
     read -p "Enter limit (optional): " limit
     read -p "Enter offset (optional): " offset
-    
+
     local data="{\"userId\": $userId"
     if [ -n "$limit" ]; then
         data+=", \"limit\": $limit"
@@ -271,7 +272,7 @@ test_get_feed() {
         data+=", \"offset\": $offset"
     fi
     data+="}"
-    
+
     make_request "POST" "$FEED_URL" "$data"
 }
 
